@@ -1,3 +1,4 @@
+#!/usr/bin/python3
 from flask import jsonify
 from models import storage
 from models import classes
