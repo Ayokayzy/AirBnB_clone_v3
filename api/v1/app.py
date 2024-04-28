@@ -18,6 +18,7 @@ def not_found(error):
 
 @app.teardown_appcontext
 def handle_teardown(evt):
+    """handles teardown"""
     storage.close()
 
 if __name__ == "__main__":
