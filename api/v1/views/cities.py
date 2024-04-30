@@ -15,13 +15,12 @@ def city_by_state(state_id):
     :return: json of all cities in a state or 404 on error
     """
     city_list = []
-    state_obj = storage.get("State", state_id)
-
-    if state_obj is None:
-        abort(404)
-    for obj in state_obj.cities:
-        city_list.append(obj.to_json())
-
+    city_obj = storage.all(City)
+    for value in city_obj.values():
+        if value.state_id == state_id:
+            city_list.append(value.to_dict())
+    if not city_list:
+        return abort(404)
     return jsonify(city_list)
 
 
@@ -47,7 +46,7 @@ def city_create(state_id):
 
     new_city = City(**city_json)
     new_city.save()
-    resp = jsonify(new_city.to_json())
+    resp = jsonify(new_city.to_dict())
     resp.status_code = 201
 
     return resp
@@ -62,12 +61,13 @@ def city_by_id(city_id):
     :return: city obj with the specified id or error
     """
 
-    fetched_obj = storage.get("City", str(city_id))
+    fetched_obj = storage.get(City, city_id)
 
+    print(fetched_obj)
     if fetched_obj is None:
         abort(404)
 
-    return jsonify(fetched_obj.to_json())
+    return jsonify(fetched_obj.to_dict())
 
 
 @app_views.route("cities/<city_id>",  methods=["PUT"], strict_slashes=False)
