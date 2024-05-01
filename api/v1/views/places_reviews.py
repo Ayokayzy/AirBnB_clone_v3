@@ -4,7 +4,6 @@ route for handling Review objects and operations
 """
 from flask import jsonify, abort, request
 from api.v1.views import app_views, storage
-from models.place import Place
 from models.review import Review
 
 
@@ -86,7 +85,13 @@ def update_review(review_id):
         abort(404)
 
     for key, val in review_json.items():
-        if key not in ["id", "created_at", "updated_at", "user_id", "place_id"]:
+        if key not in [
+            "id",
+            "created_at",
+            "updated_at",
+            "user_id",
+            "place_id"
+        ]:
             setattr(fetched_obj, key, val)
 
     fetched_obj.save()
