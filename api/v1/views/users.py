@@ -4,7 +4,10 @@ from models.user import User
 from models import storage
 from api.v1.views import app_views
 from flask import abort, jsonify, make_response, request
+from hashlib import md5
 # from flasgger.utils import swag_from
+
+m = md5()
 
 
 @app_views.route('/users', methods=['GET'], strict_slashes=False)
@@ -66,6 +69,9 @@ def post_user():
         abort(400, description="Missing password")
 
     data = request.get_json()
+    m.update(data["password"].encode())
+    hashed_password = m.hexdigest()
+    data['password'] = hashed_password
     instance = User(**data)
     instance.save()
     return make_response(jsonify(instance.to_dict()), 201)
@@ -88,6 +94,10 @@ def put_user(user_id):
     ignore = ['id', 'email', 'created_at', 'updated_at']
 
     data = request.get_json()
+    if 'password' in data:
+        m.update(data["password"].encode())
+        hashed_password = m.hexdigest()
+        data['password'] = hashed_password
     for key, value in data.items():
         if key not in ignore:
             setattr(user, key, value)
