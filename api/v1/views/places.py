@@ -32,7 +32,6 @@ def place_create(city_id):
     place_json = request.get_json(silent=True)
     if place_json is None:
         abort(400, 'Not a JSON')
-    print(place_json["user_id"])
     if not storage.get("User", place_json["user_id"]):
         abort(404)
     if not storage.get("City", city_id):
