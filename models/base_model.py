@@ -73,7 +73,7 @@ class BaseModel:
                 key: value
                 for key, value in new_dict.items()
                 if key is not "password"
-        }
+            }
         return new_dict
 
     def delete(self):

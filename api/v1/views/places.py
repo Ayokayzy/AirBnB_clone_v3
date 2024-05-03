@@ -118,7 +118,9 @@ def place_delete_by_id(place_id):
                  strict_slashes=False)
 def search_place():
     """hat retrieves all Place objects depending of the
-    JSON in the body of the request."""
+    JSON in the body of the request.
+    :return: json of all Places
+    """
 
     body = request.get_json(silent=True)
     if body is None:
