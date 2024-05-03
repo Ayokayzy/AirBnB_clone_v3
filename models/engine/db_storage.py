@@ -81,7 +81,6 @@ class DBStorage:
         found_cls = None
         for k, v in all_cls.items():
             if (v.id == id):
-                # found_cls = f"[{cls.__class__.__name__}] {id} {v.to_dict()}"
                 found_cls = v
                 break
         return found_cls
