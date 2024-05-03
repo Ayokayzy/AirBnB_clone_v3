@@ -126,11 +126,11 @@ def search_place():
 
     places_json = []
 
-    if not any(value is not None for value in body.values()):
+    if not body["states"] and not body["cities"]:
         for place in storage.all("Place").values():
             places_json.append(place.to_dict())
         print("Show all")
-        return jsonify(place_json)
+        return jsonify(places_json)
 
     if body.get('states') is not None:
         for state_id in body["states"]:
