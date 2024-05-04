@@ -113,3 +113,40 @@ def place_delete_by_id(place_id):
     storage.save()
 
     return jsonify({})
+
+@app_views.route("/places_search", methods=["POST"],
+                 strict_slashes=False)
+def search_place():
+    """hat retrieves all Place objects depending of the
+    JSON in the body of the request.
+    :return: json of all Places
+    """
+
+    body = request.get_json(silent=True)
+    if body is None:
+        return abort(400, "Not a JSON")
+
+    places_json = []
+
+    if not body["states"] and not body["cities"]:
+        for place in storage.all("Place").values():
+            places_json.append(place.to_dict())
+        print("Show all")
+        return jsonify(places_json)
+
+    if body.get('states') is not None:
+        for state_id in body["states"]:
+            state = storage.get("State", state_id)
+            if state:
+                for city in state.cities:
+                    for place in city.places:
+                        places_json.append(place.to_dict())
+
+    if body.get("cities") is not None:
+        for city_id in body["cities"]:
+            city = storage.get("City", city_id)
+            if city:
+                for places in city.places:
+                    places_json.append(places.to_dict())
+
+    return jsonify(places_json)
